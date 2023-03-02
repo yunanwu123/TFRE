@@ -71,6 +71,7 @@ hbic.rank_second <- function(newx, newy, n, beta_int, second_stage, lambda_list,
     HBIC <- log(sum(abs(newy - newx %*% beta_2nd))) + logpn * sum(abs(beta_2nd) > 1e-06) * C_n/const
     hbic <- c(hbic, HBIC)
   }
+  rownames(Beta) <- NULL
   return(list(hbic = hbic, Beta = Beta))
 }
 
