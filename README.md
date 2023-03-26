@@ -7,7 +7,7 @@ To install the package, please run the following codes in R:
 
 ```{r}
 library(devtools)
-install_github("yunanwu123/RankReg")
+install_github("yunanwu123/TFRE")
 ```
 
 
