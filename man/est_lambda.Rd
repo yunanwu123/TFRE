@@ -2,7 +2,7 @@
 % Please edit documentation in R/Functions.R
 \name{est_lambda}
 \alias{est_lambda}
-\title{Estimate the tuning parameter for Rank Lasso}
+\title{Estimate the tuning parameter for a TFRE Lasso regression}
 \usage{
 est_lambda(X, alpha0 = 0.1, const_lambda = 1.01, times = 500)
 }
@@ -19,14 +19,14 @@ greater than 1. Default value is 1.01. See more details in "Details".}
 Default value is 500.}
 }
 \value{
-The estimated tuning parameter of the Rank Lasso regression given X.
+The estimated tuning parameter of the TFRE Lasso regression given X.
 }
 \description{
-This function estimates the tuning parameter of the Rank Lasso
+This function estimates the tuning parameter of the TFRE Lasso
 regression given the covariate matrix X.
 }
 \details{
-In Rank Lasso regressions, the tuning parameter can be estimated independent
+In TFRE Lasso regressions, the tuning parameter can be estimated independent
 of errors. In Wang \emph{et al.} (2020), the following tuning parameter is suggested:
 \deqn{\lambda^* = const\_lambda * G^{-1}_{||\bm{S}_n||_\infty}(1-alpha0)},
 where \eqn{\bm{S}_n = -2[n(n-1)]^{-1}\sum_{j=1}^n\bm{x}_j[2r_j-(n+1)]}, \eqn{r_1,\ldots,r_n}
@@ -47,7 +47,7 @@ Wang, L., Peng, B., Bradic, J., Li, R. and Wu, Y. (2020),
  \doi{10.1080/01621459.2020.1840989}.
 }
 \seealso{
-\code{\link{RankReg}}
+\code{\link{TFRE}}
 }
 \author{
 Yunan Wu and Lan Wang\cr Maintainer:

@@ -2,6 +2,6 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 QICD <- function(X, y, lambda_list, thresh, maxin, maxout) {
-    .Call(`_RankReg_QICD`, X, y, lambda_list, thresh, maxin, maxout)
+    .Call(`_TFRE_QICD`, X, y, lambda_list, thresh, maxin, maxout)
 }
 

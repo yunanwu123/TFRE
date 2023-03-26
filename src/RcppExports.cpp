@@ -13,7 +13,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // QICD
 List QICD(Eigen::MatrixXd X, Eigen::VectorXd y, Eigen::VectorXd lambda_list, const double thresh, const int maxin, const int maxout);
-RcppExport SEXP _RankReg_QICD(SEXP XSEXP, SEXP ySEXP, SEXP lambda_listSEXP, SEXP threshSEXP, SEXP maxinSEXP, SEXP maxoutSEXP) {
+RcppExport SEXP _TFRE_QICD(SEXP XSEXP, SEXP ySEXP, SEXP lambda_listSEXP, SEXP threshSEXP, SEXP maxinSEXP, SEXP maxoutSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -29,11 +29,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_RankReg_QICD", (DL_FUNC) &_RankReg_QICD, 6},
+    {"_TFRE_QICD", (DL_FUNC) &_TFRE_QICD, 6},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_RankReg(DllInfo *dll) {
+RcppExport void R_init_TFRE(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }
