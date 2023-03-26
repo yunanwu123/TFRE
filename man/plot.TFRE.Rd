@@ -29,13 +29,13 @@ eta_list = 0.1*8:20*sqrt(log(p)/n)
 X <- matrix(rnorm(n*p),n)
 y <- X \%*\% beta0 + rt(n,4)
 
-Obj_TFRELasso <- TFRE(X, y, second_stage = "none")
-Obj_TFRESCAD <- TFRE(X, y, eta_list = eta_list)
-Obj_TFREMCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
+Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none")
+Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
+Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
 
-\dontrun{plot(Obj_TFRELasso)}
-plot(Obj_TFRESCAD)
-plot(Obj_TFREMCP)
+\dontrun{plot(Obj_TFRE_Lasso)}
+plot(Obj_TFRE_SCAD)
+plot(Obj_TFRE_MCP)
 
 }
 \references{

@@ -36,16 +36,16 @@ eta_list = 0.1*8:20*sqrt(log(p)/n)
 X <- matrix(rnorm(n*p),n)
 y <- X \%*\% beta0 + rt(n,4)
 
-Obj_TFRELasso <- TFRE(X, y, second_stage = "none")
-Obj_TFRESCAD <- TFRE(X, y, eta_list = eta_list)
-Obj_TFREMCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
+Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none")
+Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
+Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
 
-coef(Obj_TFRELasso, "1st")
-coef(Obj_TFRELasso, "2nd")
-coef(Obj_TFRESCAD, "1st")
-coef(Obj_TFRESCAD, "2nd")
-coef(Obj_TFREMCP, "1st")
-coef(Obj_TFREMCP, "2nd")
+coef(Obj_TFRE_Lasso, "1st")
+coef(Obj_TFRE_Lasso, "2nd")
+coef(Obj_TFRE_SCAD, "1st")
+coef(Obj_TFRE_SCAD, "2nd")
+coef(Obj_TFRE_MCP, "1st")
+coef(Obj_TFRE_MCP, "2nd")
 
 }
 \references{

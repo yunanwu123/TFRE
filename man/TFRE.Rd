@@ -78,38 +78,38 @@ following components:
 \item{y}{The response variable used.}
 \item{incomplete}{Logical. \code{TRUE} if the \emph{Incomplete U-statistics}
 resampling technique is applied, and \code{FALSE} if not.}
-\item{beta_TFRELasso}{The estimated coefficient vector of the TFRE Lasso regression.}
+\item{beta_TFRE_Lasso}{The estimated coefficient vector of the TFRE Lasso regression.}
 \item{tfre_lambda}{The estimated tuning parameter of the TFRE Lasso regression.}
 \item{second_stage}{Character vector, \code{"scad"} if the TFRE SCAD regression
 is fitted,  \code{"mcp"} if the TFRE MCP regression is fitted, \code{"none"} if
 only the TFRE Lasso regression is fitted.}
 If \code{second_stage = "scad"}, then the fitted TFRE object will also contain
-an object named as "TFREscad", which is a list containing the following components:
-\item{Beta_TFREscad}{The estimated coefficient matrix of the TFRE SCAD regression.
+an object named as "TFRE_scad", which is a list containing the following components:
+\item{Beta_TFRE_scad}{The estimated coefficient matrix of the TFRE SCAD regression.
 The diminsion is n_eta x (p+1) with the first column to be the intercepts,
 where n_eta is the length of \code{eta_list} vector.}
-\item{df_TFREscad}{The number of nonzero coefficients (intercept excluded) for
+\item{df_TFRE_scad}{The number of nonzero coefficients (intercept excluded) for
 each value in \code{eta_list}.}
 \item{eta_list}{The tuning parameter vector used in the TFRE SCAD regressions}
 \item{hbic}{A numerical vector of HBIC values for the TFRE SCAD model corresponding
 to each value in \code{eta_list}.}
 \item{eta_min}{The eta value which yields the smallest HBIC value in the TFRE
 SCAD regression.}
-\item{Beta_TFREscad_min}{The estimated coefficient vector which employs \code{eta_min}
+\item{Beta_TFRE_scad_min}{The estimated coefficient vector which employs \code{eta_min}
 as the eta value in the TFRE SCAD regression.}
 If \code{second_stage = "mcp"}, then the fitted TFRE object will also contain
-an object named as "TFREmcp", which is a list containing the following components:
-\item{Beta_TFREmcp}{The estimated coefficient matrix of the TFRE MCP regression.
+an object named as "TFRE_mcp", which is a list containing the following components:
+\item{Beta_TFRE_mcp}{The estimated coefficient matrix of the TFRE MCP regression.
 The diminsion is n_eta x (p+1) with the first column to be the intercepts,
 where n_eta is the length of \code{eta_list} vector.}
-\item{df_TFREmcp}{The number of nonzero coefficients (intercept excluded) for
+\item{df_TFRE_mcp}{The number of nonzero coefficients (intercept excluded) for
 each value in \code{eta_list}.}
 \item{eta_list}{The tuning parameter vector used in the TFRE MCP regressions}
 \item{hbic}{A numerical vector of HBIC values for the TFRE MCP model corresponding
 to each value in \code{eta_list}.}
 \item{eta_min}{The eta value which yields the smallest HBIC value in the TFRE
 MCP regression.}
-\item{Beta_TFREmcp_min}{The estimated coefficient vector which employs \code{eta_min}
+\item{Beta_TFRE_mcp_min}{The estimated coefficient vector which employs \code{eta_min}
 as the eta value in the TFRE MCP regression.}
 }
 \description{
@@ -152,18 +152,18 @@ eta_list = 0.1*8:20*sqrt(log(p)/n)
 X <- matrix(rnorm(n*p),n)
 y <- X \%*\% beta0 + rt(n,4)
 
-Obj_TFRELasso <- TFRE(X, y, second_stage = "none")
-Obj_TFRELasso$beta_TFRELasso
+Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none")
+Obj_TFRE_Lasso$beta_TFRE_Lasso
 
-Obj_TFRESCAD <- TFRE(X, y, eta_list = eta_list)
-Obj_TFRESCAD$TFREscad$hbic
-Obj_TFRESCAD$TFREscad$df_TFREscad
-Obj_TFRESCAD$TFREscad$Beta_TFREscad_min
+Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
+Obj_TFRE_SCAD$TFRE_scad$hbic
+Obj_TFRE_SCAD$TFRE_scad$df_TFRE_scad
+Obj_TFRE_SCAD$TFRE_scad$Beta_TFRE_scad_min
 
-Obj_TFREMCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
-Obj_TFREMCP$TFREmcp$hbic
-Obj_TFREMCP$TFREmcp$df_TFREmcp
-Obj_TFREMCP$TFREmcp$Beta_TFREmcp_min
+Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
+Obj_TFRE_MCP$TFRE_mcp$hbic
+Obj_TFRE_MCP$TFRE_mcp$df_TFRE_mcp
+Obj_TFRE_MCP$TFRE_mcp$Beta_TFRE_mcp_min
 
 }
 \references{

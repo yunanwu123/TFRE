@@ -147,38 +147,38 @@ hbic.tfre_second <- function(newx, newy, n, beta_int, second_stage, lambda_list,
 #' \item{y}{The response variable used.}
 #' \item{incomplete}{Logical. \code{TRUE} if the \emph{Incomplete U-statistics}
 #' resampling technique is applied, and \code{FALSE} if not.}
-#' \item{beta_TFRELasso}{The estimated coefficient vector of the TFRE Lasso regression.}
+#' \item{beta_TFRE_Lasso}{The estimated coefficient vector of the TFRE Lasso regression.}
 #' \item{tfre_lambda}{The estimated tuning parameter of the TFRE Lasso regression.}
 #' \item{second_stage}{Character vector, \code{"scad"} if the TFRE SCAD regression
 #' is fitted,  \code{"mcp"} if the TFRE MCP regression is fitted, \code{"none"} if
 #' only the TFRE Lasso regression is fitted.}
 #' If \code{second_stage = "scad"}, then the fitted TFRE object will also contain
-#' an object named as "TFREscad", which is a list containing the following components:
-#' \item{Beta_TFREscad}{The estimated coefficient matrix of the TFRE SCAD regression.
+#' an object named as "TFRE_scad", which is a list containing the following components:
+#' \item{Beta_TFRE_scad}{The estimated coefficient matrix of the TFRE SCAD regression.
 #' The diminsion is n_eta x (p+1) with the first column to be the intercepts,
 #' where n_eta is the length of \code{eta_list} vector.}
-#' \item{df_TFREscad}{The number of nonzero coefficients (intercept excluded) for
+#' \item{df_TFRE_scad}{The number of nonzero coefficients (intercept excluded) for
 #' each value in \code{eta_list}.}
 #' \item{eta_list}{The tuning parameter vector used in the TFRE SCAD regressions}
 #' \item{hbic}{A numerical vector of HBIC values for the TFRE SCAD model corresponding
 #' to each value in \code{eta_list}.}
 #' \item{eta_min}{The eta value which yields the smallest HBIC value in the TFRE
 #' SCAD regression.}
-#' \item{Beta_TFREscad_min}{The estimated coefficient vector which employs \code{eta_min}
+#' \item{Beta_TFRE_scad_min}{The estimated coefficient vector which employs \code{eta_min}
 #' as the eta value in the TFRE SCAD regression.}
 #' If \code{second_stage = "mcp"}, then the fitted TFRE object will also contain
-#' an object named as "TFREmcp", which is a list containing the following components:
-#' \item{Beta_TFREmcp}{The estimated coefficient matrix of the TFRE MCP regression.
+#' an object named as "TFRE_mcp", which is a list containing the following components:
+#' \item{Beta_TFRE_mcp}{The estimated coefficient matrix of the TFRE MCP regression.
 #' The diminsion is n_eta x (p+1) with the first column to be the intercepts,
 #' where n_eta is the length of \code{eta_list} vector.}
-#' \item{df_TFREmcp}{The number of nonzero coefficients (intercept excluded) for
+#' \item{df_TFRE_mcp}{The number of nonzero coefficients (intercept excluded) for
 #' each value in \code{eta_list}.}
 #' \item{eta_list}{The tuning parameter vector used in the TFRE MCP regressions}
 #' \item{hbic}{A numerical vector of HBIC values for the TFRE MCP model corresponding
 #' to each value in \code{eta_list}.}
 #' \item{eta_min}{The eta value which yields the smallest HBIC value in the TFRE
 #' MCP regression.}
-#' \item{Beta_TFREmcp_min}{The estimated coefficient vector which employs \code{eta_min}
+#' \item{Beta_TFRE_mcp_min}{The estimated coefficient vector which employs \code{eta_min}
 #' as the eta value in the TFRE MCP regression.}
 #' @author Yunan Wu and Lan Wang\cr Maintainer:
 #' Yunan Wu <yunan.wu@@utdallas.edu>
@@ -205,18 +205,18 @@ hbic.tfre_second <- function(newx, newy, n, beta_int, second_stage, lambda_list,
 #' X <- matrix(rnorm(n*p),n)
 #' y <- X %*% beta0 + rt(n,4)
 #'
-#' Obj_TFRELasso <- TFRE(X, y, second_stage = "none")
-#' Obj_TFRELasso$beta_TFRELasso
+#' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none")
+#' Obj_TFRE_Lasso$beta_TFRE_Lasso
 #'
-#' Obj_TFRESCAD <- TFRE(X, y, eta_list = eta_list)
-#' Obj_TFRESCAD$TFREscad$hbic
-#' Obj_TFRESCAD$TFREscad$df_TFREscad
-#' Obj_TFRESCAD$TFREscad$Beta_TFREscad_min
+#' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
+#' Obj_TFRE_SCAD$TFRE_scad$hbic
+#' Obj_TFRE_SCAD$TFRE_scad$df_TFRE_scad
+#' Obj_TFRE_SCAD$TFRE_scad$Beta_TFRE_scad_min
 #'
-#' Obj_TFREMCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
-#' Obj_TFREMCP$TFREmcp$hbic
-#' Obj_TFREMCP$TFREmcp$df_TFREmcp
-#' Obj_TFREMCP$TFREmcp$Beta_TFREmcp_min
+#' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
+#' Obj_TFRE_MCP$TFRE_mcp$hbic
+#' Obj_TFRE_MCP$TFRE_mcp$df_TFRE_mcp
+#' Obj_TFRE_MCP$TFRE_mcp$Beta_TFRE_mcp_min
 #'
 
 TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
@@ -253,42 +253,42 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
     newx <- x_diff
     newy <- y_diff
   }
-  obj_TFRELasso <- QICD(newx, newy, lambda_list = lam_lasso, thresh = thresh,
+  obj_TFRE_Lasso <- QICD(newx, newy, lambda_list = lam_lasso, thresh = thresh,
                         maxin = maxin, maxout = maxout)
-  beta_RL <- as.vector(obj_TFRELasso$beta_final)
+  beta_RL <- as.vector(obj_TFRE_Lasso$beta_final)
 
   intercpt_RL <- ybar- crossprod(beta_RL,xbar)
-  beta_TFRELasso <- c(intercpt_RL,beta_RL)
+  beta_TFRE_Lasso <- c(intercpt_RL,beta_RL)
 
-  res <- list(X=X,y=y,incomplete=incomplete,beta_TFRELasso=beta_TFRELasso,
+  res <- list(X=X,y=y,incomplete=incomplete,beta_TFRE_Lasso=beta_TFRE_Lasso,
               tfre_lambda=lam_lasso,second_stage=second_stage)
 
   if(second_stage == "scad"){
-    obj_TFREscad <- hbic.tfre_second(newx, newy, n, beta_RL, second_stage, eta_list, a = a,
+    obj_TFRE_scad <- hbic.tfre_second(newx, newy, n, beta_RL, second_stage, eta_list, a = a,
                                   thresh = thresh, maxin = maxin, maxout = maxout,
                                   const = const_hbic)
-    intercpt_Rs <- ybar - (obj_TFREscad$Beta%*%xbar)
-    Beta_TFREscad <- cbind(intercpt_Rs,obj_TFREscad$Beta)
-    min_ind <- which.min(obj_TFREscad$hbic)
-    df <- colSums(t(obj_TFREscad$Beta)!=0)
-    res_scad <- list(Beta_TFREscad = Beta_TFREscad, df_TFREscad = df,
-                     eta_list = eta_list, hbic = obj_TFREscad$hbic,
-                     eta_min = eta_list[min_ind], Beta_TFREscad_min = Beta_TFREscad[min_ind,])
+    intercpt_Rs <- ybar - (obj_TFRE_scad$Beta%*%xbar)
+    Beta_TFRE_scad <- cbind(intercpt_Rs,obj_TFRE_scad$Beta)
+    min_ind <- which.min(obj_TFRE_scad$hbic)
+    df <- colSums(t(obj_TFRE_scad$Beta)!=0)
+    res_scad <- list(Beta_TFRE_scad = Beta_TFRE_scad, df_TFRE_scad = df,
+                     eta_list = eta_list, hbic = obj_TFRE_scad$hbic,
+                     eta_min = eta_list[min_ind], Beta_TFRE_scad_min = Beta_TFRE_scad[min_ind,])
 
-    res <- append(res, list(TFREscad = res_scad))
+    res <- append(res, list(TFRE_scad = res_scad))
   } else if(second_stage == "mcp"){
-    obj_TFREmcp <- hbic.tfre_second(newx, newy, n, beta_RL, second_stage, eta_list, a = a,
+    obj_TFRE_mcp <- hbic.tfre_second(newx, newy, n, beta_RL, second_stage, eta_list, a = a,
                                   thresh = thresh, maxin = maxin, maxout = maxout,
                                   const = const_hbic)
-    intercpt_Rm <- ybar - (obj_TFREmcp$Beta%*%xbar)
-    Beta_TFREmcp <- cbind(intercpt_Rm,obj_TFREmcp$Beta)
-    min_ind <- which.min(obj_TFREmcp$hbic)
-    df <- colSums(t(obj_TFREmcp$Beta)!=0)
-    res_mcp <- list(Beta_TFREmcp = Beta_TFREmcp, df_TFREmcp = df,
-                     eta_list = eta_list, hbic = obj_TFREmcp$hbic,
-                     eta_min = eta_list[min_ind], Beta_TFREmcp_min = Beta_TFREmcp[min_ind,])
+    intercpt_Rm <- ybar - (obj_TFRE_mcp$Beta%*%xbar)
+    Beta_TFRE_mcp <- cbind(intercpt_Rm,obj_TFRE_mcp$Beta)
+    min_ind <- which.min(obj_TFRE_mcp$hbic)
+    df <- colSums(t(obj_TFRE_mcp$Beta)!=0)
+    res_mcp <- list(Beta_TFRE_mcp = Beta_TFRE_mcp, df_TFRE_mcp = df,
+                     eta_list = eta_list, hbic = obj_TFRE_mcp$hbic,
+                     eta_min = eta_list[min_ind], Beta_TFRE_mcp_min = Beta_TFRE_mcp[min_ind,])
 
-    res <- append(res, list(TFREmcp = res_mcp))
+    res <- append(res, list(TFRE_mcp = res_mcp))
   }else if(second_stage != "none"){
     warning("'second_stage' should be one of 'none', 'scad' and 'mcp'")
   }
@@ -326,17 +326,17 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
 #' X <- matrix(rnorm(n*p),n)
 #' y <- X %*% beta0 + rt(n,4)
 #'
-#' Obj_TFRELasso <- TFRE(X, y, second_stage = "none")
-#' Obj_TFRESCAD <- TFRE(X, y, eta_list = eta_list)
-#' Obj_TFREMCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
+#' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none")
+#' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
+#' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
 #'
 #' newX <- matrix(rnorm(n*p),n)
-#' predict(Obj_TFRELasso, newX, "1st")
-#' predict(Obj_TFRELasso, newX, "2nd")
-#' predict(Obj_TFRESCAD, newX, "1st")
-#' predict(Obj_TFRESCAD, newX, "2nd")
-#' predict(Obj_TFREMCP, newX, "1st")
-#' predict(Obj_TFREMCP, newX, "2nd")
+#' predict(Obj_TFRE_Lasso, newX, "1st")
+#' predict(Obj_TFRE_Lasso, newX, "2nd")
+#' predict(Obj_TFRE_SCAD, newX, "1st")
+#' predict(Obj_TFRE_SCAD, newX, "2nd")
+#' predict(Obj_TFRE_MCP, newX, "1st")
+#' predict(Obj_TFRE_MCP, newX, "2nd")
 #'
 #' @method predict TFRE
 #'
@@ -348,14 +348,14 @@ predict.TFRE<-function(object, newX, s, ...){
     stop("Please supply a valid 'TFRE' object")
   }
   if(s=="1st"){
-    pred <- cbind(1,newX)%*%object$beta_TFRELasso
+    pred <- cbind(1,newX)%*%object$beta_TFRE_Lasso
   }else if(s=="2nd"){
     if(object$second_stage == "scad"){
-      pred <- cbind(1,newX)%*%object$TFREscad$Beta_TFREscad_min
+      pred <- cbind(1,newX)%*%object$TFRE_scad$Beta_TFRE_scad_min
     } else if(object$second_stage == "mcp"){
-      pred <- cbind(1,newX)%*%object$TFREmcp$Beta_TFREmcp_min
+      pred <- cbind(1,newX)%*%object$TFRE_mcp$Beta_TFRE_mcp_min
     }else{
-      pred <- cbind(1,newX)%*%object$beta_TFRELasso
+      pred <- cbind(1,newX)%*%object$beta_TFRE_Lasso
       warning("The object doesn't include a second stage model. Return the predicted values according to the TFRE Lasso regression")
     }
   }else{
@@ -395,16 +395,16 @@ predict.TFRE<-function(object, newX, s, ...){
 #' X <- matrix(rnorm(n*p),n)
 #' y <- X %*% beta0 + rt(n,4)
 #'
-#' Obj_TFRELasso <- TFRE(X, y, second_stage = "none")
-#' Obj_TFRESCAD <- TFRE(X, y, eta_list = eta_list)
-#' Obj_TFREMCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
+#' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none")
+#' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
+#' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
 #'
-#' coef(Obj_TFRELasso, "1st")
-#' coef(Obj_TFRELasso, "2nd")
-#' coef(Obj_TFRESCAD, "1st")
-#' coef(Obj_TFRESCAD, "2nd")
-#' coef(Obj_TFREMCP, "1st")
-#' coef(Obj_TFREMCP, "2nd")
+#' coef(Obj_TFRE_Lasso, "1st")
+#' coef(Obj_TFRE_Lasso, "2nd")
+#' coef(Obj_TFRE_SCAD, "1st")
+#' coef(Obj_TFRE_SCAD, "2nd")
+#' coef(Obj_TFRE_MCP, "1st")
+#' coef(Obj_TFRE_MCP, "2nd")
 #'
 #' @method coef TFRE
 #'
@@ -413,14 +413,14 @@ coef.TFRE<-function(object, s, ...){
     stop("Please supply a valid 'TFRE' object")
   }
   if(s=="1st"){
-    coef <- object$beta_TFRELasso
+    coef <- object$beta_TFRE_Lasso
   }else if(s=="2nd"){
     if(object$second_stage == "scad"){
-      coef <- object$TFREscad$Beta_TFREscad_min
+      coef <- object$TFRE_scad$Beta_TFRE_scad_min
     }else if(object$second_stage == "mcp"){
-      coef <- object$TFREmcp$Beta_TFREmcp_min
+      coef <- object$TFRE_mcp$Beta_TFRE_mcp_min
     }else{
-      coef <- object$beta_TFRELasso
+      coef <- object$beta_TFRE_Lasso
       warning("The object doesn't include a second stage model. Return the coefficient vector from the TFRE Lasso regression")
     }
   }else{
@@ -455,13 +455,13 @@ coef.TFRE<-function(object, s, ...){
 #' X <- matrix(rnorm(n*p),n)
 #' y <- X %*% beta0 + rt(n,4)
 #'
-#' Obj_TFRELasso <- TFRE(X, y, second_stage = "none")
-#' Obj_TFRESCAD <- TFRE(X, y, eta_list = eta_list)
-#' Obj_TFREMCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
+#' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none")
+#' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
+#' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
 #'
-#' \dontrun{plot(Obj_TFRELasso)}
-#' plot(Obj_TFRESCAD)
-#' plot(Obj_TFREMCP)
+#' \dontrun{plot(Obj_TFRE_Lasso)}
+#' plot(Obj_TFRE_SCAD)
+#' plot(Obj_TFRE_MCP)
 #'
 #' @method plot TFRE
 #'
@@ -471,23 +471,23 @@ plot.TFRE<-function(x, ...){
   }
   if(x$second_stage == "scad"){
     par(mar = c(5, 4, 4, 4) + 0.3)
-    plot(x$TFREscad$eta_list, x$TFREscad$hbic,type = "l", col = "red",
+    plot(x$TFRE_scad$eta_list, x$TFRE_scad$hbic,type = "l", col = "red",
          xlab = "eta value", ylab = "HBIC")
     par(new = TRUE)
-    plot(x$TFREscad$eta_list, x$TFREscad$df_TFREscad, type = "l",
+    plot(x$TFRE_scad$eta_list, x$TFRE_scad$df_TFRE_scad, type = "l",
          col = "blue",  axes = FALSE, xlab = "", ylab = "")
-    abline(v = x$TFREscad$eta_min, lty = 2, col = "purple")
-    axis(side = 4, at = pretty(range(x$TFREscad$df_TFREscad)))
+    abline(v = x$TFRE_scad$eta_min, lty = 2, col = "purple")
+    axis(side = 4, at = pretty(range(x$TFRE_scad$df_TFRE_scad)))
     mtext("df", side = 4, line = 3)
   }else if(x$second_stage == "mcp"){
     par(mar = c(5, 4, 4, 4) + 0.3)
-    plot(x$TFREmcp$eta_list, x$TFREmcp$hbic, type = "l", col = "red",
+    plot(x$TFRE_mcp$eta_list, x$TFRE_mcp$hbic, type = "l", col = "red",
          xlab = "eta value", ylab = "HBIC")
     par(new = TRUE)
-    plot(x$TFREmcp$eta_list, x$TFREmcp$df_TFREmcp, type="l", col = "blue",
+    plot(x$TFRE_mcp$eta_list, x$TFRE_mcp$df_TFRE_mcp, type="l", col = "blue",
          axes = FALSE, xlab = "", ylab = "")
-    abline(v = x$TFREmcp$eta_min, lty = 2, col = "purple")
-    axis(side = 4, at = pretty(range(x$TFREmcp$df_TFREmcp)))
+    abline(v = x$TFRE_mcp$eta_min, lty = 2, col = "purple")
+    axis(side = 4, at = pretty(range(x$TFRE_mcp$df_TFRE_mcp)))
     mtext("df", side = 4, line = 3)
   }else{
     stop("Please supply a valid 'TFRE' object with a second stage model")
