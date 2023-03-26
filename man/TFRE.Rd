@@ -78,7 +78,8 @@ following components:
 \item{y}{The response variable used.}
 \item{incomplete}{Logical. \code{TRUE} if the \emph{Incomplete U-statistics}
 resampling technique is applied, and \code{FALSE} if not.}
-\item{beta_TFRE_Lasso}{The estimated coefficient vector of the TFRE Lasso regression.}
+\item{beta_TFRE_Lasso}{The estimated coefficient vector of the TFRE Lasso regression.
+The first element is the estimated intercept.}
 \item{tfre_lambda}{The estimated tuning parameter of the TFRE Lasso regression.}
 \item{second_stage}{Character vector, \code{"scad"} if the TFRE SCAD regression
 is fitted,  \code{"mcp"} if the TFRE MCP regression is fitted, \code{"none"} if
