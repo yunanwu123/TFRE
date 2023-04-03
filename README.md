@@ -1,4 +1,4 @@
-# TFRE: A Tuning-free Robust and Efficient Approach to High-dimensional Regression
+# TFRE: A Tuning-Free Robust and Efficient Approach to High-dimensional Regression
  This R package provides functions to estimate the coefficients in high-dimensional linear regressions via a tuning-free and robust approach.  The method was published in Lan Wang, Bo Peng, Jelena Bradic, Runze Li and Yunan Wu (2020) A tuning-free robust and efficient approach to high-dimensional regression. Journal of the American Statistical Association, 115, 1700-1714 (JASA’s discussion paper). See also Lan Wang, Bo Peng, Jelena Bradic, Runze Li and Yunan Wu (2020), Rejoinder to “A tuning-free robust and efficient approach to high-dimensional regression". Journal of the American Statistical Association, 115, 1726-1729.
 
  
