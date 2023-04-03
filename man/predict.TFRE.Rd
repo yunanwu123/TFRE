@@ -41,7 +41,7 @@ Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none")
 Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
 Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
 
-newX <- matrix(rnorm(n*p),n)
+newX <- matrix(rnorm(10*p),10)
 predict(Obj_TFRE_Lasso, newX, "1st")
 predict(Obj_TFRE_Lasso, newX, "2nd")
 predict(Obj_TFRE_SCAD, newX, "1st")

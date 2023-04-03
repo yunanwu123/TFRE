@@ -331,7 +331,7 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
 #' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
 #' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
 #'
-#' newX <- matrix(rnorm(n*p),n)
+#' newX <- matrix(rnorm(10*p),10)
 #' predict(Obj_TFRE_Lasso, newX, "1st")
 #' predict(Obj_TFRE_Lasso, newX, "2nd")
 #' predict(Obj_TFRE_SCAD, newX, "1st")
@@ -347,6 +347,10 @@ predict.TFRE<-function(object, newX, s, ...){
   }
   if(attr(object, "class")!="TFRE"){
     stop("Please supply a valid 'TFRE' object")
+  }
+  p <- ncol(object$X)
+  if(ncol(newX)!=p){
+    stop(paste("The number of variables in 'newX' must be", p))
   }
   if(s=="1st"){
     pred <- cbind(1,newX)%*%object$beta_TFRE_Lasso
@@ -400,12 +404,12 @@ predict.TFRE<-function(object, newX, s, ...){
 #' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
 #' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
 #'
-#' coef(Obj_TFRE_Lasso, "1st")
-#' coef(Obj_TFRE_Lasso, "2nd")
-#' coef(Obj_TFRE_SCAD, "1st")
-#' coef(Obj_TFRE_SCAD, "2nd")
-#' coef(Obj_TFRE_MCP, "1st")
-#' coef(Obj_TFRE_MCP, "2nd")
+#' coef(Obj_TFRE_Lasso, "1st")[1:10]
+#' coef(Obj_TFRE_Lasso, "2nd")[1:10]
+#' coef(Obj_TFRE_SCAD, "1st")[1:10]
+#' coef(Obj_TFRE_SCAD, "2nd")[1:10]
+#' coef(Obj_TFRE_MCP, "1st")[1:10]
+#' coef(Obj_TFRE_MCP, "2nd")[1:10]
 #'
 #' @method coef TFRE
 #'

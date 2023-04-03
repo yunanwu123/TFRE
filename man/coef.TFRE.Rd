@@ -40,12 +40,12 @@ Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none")
 Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
 Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
 
-coef(Obj_TFRE_Lasso, "1st")
-coef(Obj_TFRE_Lasso, "2nd")
-coef(Obj_TFRE_SCAD, "1st")
-coef(Obj_TFRE_SCAD, "2nd")
-coef(Obj_TFRE_MCP, "1st")
-coef(Obj_TFRE_MCP, "2nd")
+coef(Obj_TFRE_Lasso, "1st")[1:10]
+coef(Obj_TFRE_Lasso, "2nd")[1:10]
+coef(Obj_TFRE_SCAD, "1st")[1:10]
+coef(Obj_TFRE_SCAD, "2nd")[1:10]
+coef(Obj_TFRE_MCP, "1st")[1:10]
+coef(Obj_TFRE_MCP, "2nd")[1:10]
 
 }
 \references{
