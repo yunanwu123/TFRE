@@ -301,7 +301,7 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
 #' Make predictions from a 'TFRE' object
 #'
 #' @description This function make predictions for new X values from a fitted
-#' TFRE Lasso or TFRE SCAD model.
+#' TFRE Lasso, SCAD or MCP model.
 #' @param object Fitted "TFRE" model object.
 #' @param newX Matrix of new values for X at which predictions are to be made.
 #' @param s Regression model to use for prediction. Should be one of "1st" and
@@ -480,6 +480,8 @@ plot.TFRE<-function(x, ...){
     abline(v = x$TFRE_scad$eta_min, lty = 2, col = "purple")
     axis(side = 4, at = pretty(range(x$TFRE_scad$df_TFRE_scad)))
     mtext("df", side = 4, line = 3)
+    legend("right", legend = c("HBIC", "df"), col = c("red", "blue"),
+           lty = 1, bty = "n")
   }else if(x$second_stage == "mcp"){
     par(mar = c(5, 4, 4, 4) + 0.3)
     plot(x$TFRE_mcp$eta_list, x$TFRE_mcp$hbic, type = "l", col = "red",
@@ -490,6 +492,8 @@ plot.TFRE<-function(x, ...){
     abline(v = x$TFRE_mcp$eta_min, lty = 2, col = "purple")
     axis(side = 4, at = pretty(range(x$TFRE_mcp$df_TFRE_mcp)))
     mtext("df", side = 4, line = 3)
+    legend("right", legend = c("HBIC", "df"), col = c("red", "blue"),
+           lty = 1, bty = "n")
   }else{
     stop("Please supply a valid 'TFRE' object with a second stage model")
   }

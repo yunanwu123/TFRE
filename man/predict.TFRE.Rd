@@ -21,7 +21,7 @@ A vector of predictions for the new X values given the fitted TFRE model.
 }
 \description{
 This function make predictions for new X values from a fitted
-TFRE Lasso or TFRE SCAD model.
+TFRE Lasso, SCAD or MCP model.
 }
 \details{
 If \code{object$second_stage = "none"}, \code{s} cannot be "2nd". If
