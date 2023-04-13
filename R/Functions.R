@@ -202,7 +202,7 @@ hbic.tfre_second <- function(newx, newy, n, beta_int, second_stage, lambda_list,
 #' @examples
 #' n <- 100; p <- 400
 #' beta0 <- c(1.5,-1.25,1,-0.75,0.5,rep(0,p-5))
-#' eta_list = 0.1*8:20*sqrt(log(p)/n)
+#' eta_list <- 0.1*8:20*sqrt(log(p)/n)
 #' X <- matrix(rnorm(n*p),n)
 #' y <- X %*% beta0 + rt(n,4)
 #'
@@ -323,7 +323,7 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
 #' @examples
 #' n <- 100; p <- 400
 #' beta0 <- c(1.5,-1.25,1,-0.75,0.5,rep(0,p-5))
-#' eta_list = 0.1*8:20*sqrt(log(p)/n)
+#' eta_list <- 0.1*8:20*sqrt(log(p)/n)
 #' X <- matrix(rnorm(n*p),n)
 #' y <- X %*% beta0 + rt(n,4)
 #'
@@ -396,7 +396,7 @@ predict.TFRE<-function(object, newX, s, ...){
 #' @examples
 #' n <- 100; p <- 400
 #' beta0 <- c(1.5,-1.25,1,-0.75,0.5,rep(0,p-5))
-#' eta_list = 0.1*8:20*sqrt(log(p)/n)
+#' eta_list <- 0.1*8:20*sqrt(log(p)/n)
 #' X <- matrix(rnorm(n*p),n)
 #' y <- X %*% beta0 + rt(n,4)
 #'
@@ -456,7 +456,7 @@ coef.TFRE<-function(object, s, ...){
 #' @examples
 #' n <- 100; p <- 400
 #' beta0 <- c(1.5,-1.25,1,-0.75,0.5,rep(0,p-5))
-#' eta_list = 0.1*8:20*sqrt(log(p)/n)
+#' eta_list <- 0.1*8:20*sqrt(log(p)/n)
 #' X <- matrix(rnorm(n*p),n)
 #' y <- X %*% beta0 + rt(n,4)
 #'

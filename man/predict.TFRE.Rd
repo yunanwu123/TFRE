@@ -33,7 +33,7 @@ based on the TFRE SCAD or MCP regression with the smallest HBIC.
 \examples{
 n <- 100; p <- 400
 beta0 <- c(1.5,-1.25,1,-0.75,0.5,rep(0,p-5))
-eta_list = 0.1*8:20*sqrt(log(p)/n)
+eta_list <- 0.1*8:20*sqrt(log(p)/n)
 X <- matrix(rnorm(n*p),n)
 y <- X \%*\% beta0 + rt(n,4)
 
