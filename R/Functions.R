@@ -34,44 +34,34 @@ est_lambda<-function(X, alpha0 = 0.1, const_lambda = 1.01, times = 500){
     stop("Please supply the covariate matrix X to estimate the tuning parameter for TFRE Lasso")
   }
   n <- nrow(X)
-  res <- NULL
-  for (i in 1:times){
-    epsilon_tfre <- sample(1:n,n)
-    xi <- 2*epsilon_tfre-(n+1)
-    S <- (-2/n/(n-1))*crossprod(X,xi)
-    res <- c(res,max(abs(S)))
-  }
+  epsilon_tfre <- replicate(times,sample(1:n,n))
+  xi <- 2*epsilon_tfre-(n+1)
+  S <- (-2/n/(n-1))*crossprod(X,xi)
+  res <- apply(S, 2, function(t)max(abs(t)))
+  
   return(quantile(res,1-alpha0)*const_lambda)
 }
 
 p_diff <- function(theta,second_stage, lambda, a = 3.7){
+  theta <- abs(theta) 
   if(second_stage=="scad"){
-    less <- theta<=lambda
-    y <- pmax(a*lambda-theta,0)
-    res <- lambda*less+y*(1-less)/(a-1)
+    less <- outer(theta,lambda,"<=")
+    y <- pmax(outer(-theta,a*lambda,"+"),0)
+    res <- t(t(less)*lambda)+y*(1-less)/(a-1)
   }else{
-    res <- pmin(lambda-abs(theta)/a,lambda)
+    res <- pmin(outer(-theta/a,lambda,"+"),lambda)
   }
-  return(pmax(res,1e-3))
+  return(pmax(res,1e-4))
 }
 
 hbic.tfre_second <- function(newx, newy, n, beta_int, second_stage, lambda_list, a,
-                          thresh, maxin, maxout, const){
-  hbic <- NULL
-  Beta <- NULL
-  C_n <- log(log(n))/n
-  logpn <- log(ncol(newx))
-
-  for(i in 1:length(lambda_list)){
-    penalty <- p_diff(beta_int,second_stage,lambda_list[i],a)
-    x_update <- t(apply(newx,1,function(x)x/penalty))
-    obj <- QICD(x_update,newy,lambda_list = 1,thresh = thresh, maxin = maxin, maxout = maxout)
-    beta_2nd <- as.vector(obj$beta_final)/penalty
-    Beta <- rbind(Beta, beta_2nd)
-    HBIC <- log(sum(abs(newy - newx %*% beta_2nd))) + logpn * sum(abs(beta_2nd) > 1e-06) * C_n/const
-    hbic <- c(hbic, HBIC)
-  }
-  rownames(Beta) <- NULL
+                             thresh, maxin, maxout, const){ 
+  penalty <- p_diff(beta_int,second_stage,lambda_list,a)
+  Beta <- QICD(newx,newy,lambda_list = penalty, initial = beta_int, thresh = thresh, 
+               maxin = maxin, maxout = maxout)
+  df <- apply(Beta, 1, function(t){sum(abs(t) > 1e-06)})
+  hbic <- apply(Beta, 1, function(t)log(sum(abs(newy-newx%*%t)))) + log(ncol(newx)) * df * log(log(n))/n/const
+  
   return(list(hbic = hbic, Beta = Beta))
 }
 
@@ -221,9 +211,9 @@ hbic.tfre_second <- function(newx, newy, n, beta_int, second_stage, lambda_list,
 #'
 
 TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
-                    incomplete = TRUE, const_incomplete = 10, thresh = 1e-6,
-                    maxin = 100, maxout = 20, second_stage = "scad", a = 3.7,
-                    eta_list = NULL, const_hbic = 6){
+                 incomplete = TRUE, const_incomplete = 10, thresh = 1e-6,
+                 maxin = 100, maxout = 20, second_stage = "scad", a = 3.7,
+                 eta_list = NULL, const_hbic = 6){
   if(missing(X)|missing(y)){
     stop("Please supply the data (X, y) for the regression")
   }
@@ -233,7 +223,7 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
   if(second_stage!="none" & is.null(eta_list)){
     stop("Please supply the tuning parameter list for the TFRE SCAD or MCP regression")
   }
-
+  
   elm_diff <- function(index,v){
     return(v[index[1],]-v[index[2],])
   }
@@ -245,7 +235,9 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
   xbar <- colMeans(X)
   ybar <- mean(y)
   lam_lasso <- est_lambda(X, alpha0, const_lambda, times)
-
+  p <- ncol(X)
+  initial <- rep(0,p)
+  
   if(incomplete){
     id <- sample(1:n_diff,const_incomplete*n)
     newx <- x_diff[id,]
@@ -254,20 +246,20 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
     newx <- x_diff
     newy <- y_diff
   }
-  obj_TFRE_Lasso <- QICD(newx, newy, lambda_list = lam_lasso, thresh = thresh,
-                        maxin = maxin, maxout = maxout)
-  beta_RL <- as.vector(obj_TFRE_Lasso$beta_final)
-
+  beta_RL <- as.vector(QICD(newx, newy, lambda_list = matrix(lam_lasso,nrow = p), 
+                            initial = initial, thresh = thresh, maxin = maxin,
+                            maxout = maxout)) 
+  
   intercpt_RL <- ybar- crossprod(beta_RL,xbar)
   beta_TFRE_Lasso <- c(intercpt_RL,beta_RL)
-
+  
   res <- list(X=X,y=y,incomplete=incomplete,beta_TFRE_Lasso=beta_TFRE_Lasso,
               tfre_lambda=lam_lasso,second_stage=second_stage)
-
+  
   if(second_stage == "scad"){
-    obj_TFRE_scad <- hbic.tfre_second(newx, newy, n, beta_RL, second_stage, eta_list, a = a,
-                                  thresh = thresh, maxin = maxin, maxout = maxout,
-                                  const = const_hbic)
+    obj_TFRE_scad <- hbic.tfre_second(newx, newy, n, beta_RL, second_stage, eta_list, 
+                                      a = a, thresh = thresh, maxin = maxin, 
+                                      maxout = maxout, const = const_hbic)
     intercpt_Rs <- ybar - (obj_TFRE_scad$Beta%*%xbar)
     Beta_TFRE_scad <- cbind(intercpt_Rs,obj_TFRE_scad$Beta)
     min_ind <- which.min(obj_TFRE_scad$hbic)
@@ -275,20 +267,20 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
     res_scad <- list(Beta_TFRE_scad = Beta_TFRE_scad, df_TFRE_scad = df,
                      eta_list = eta_list, hbic = obj_TFRE_scad$hbic,
                      eta_min = eta_list[min_ind], Beta_TFRE_scad_min = Beta_TFRE_scad[min_ind,])
-
+    
     res <- append(res, list(TFRE_scad = res_scad))
   } else if(second_stage == "mcp"){
-    obj_TFRE_mcp <- hbic.tfre_second(newx, newy, n, beta_RL, second_stage, eta_list, a = a,
-                                  thresh = thresh, maxin = maxin, maxout = maxout,
-                                  const = const_hbic)
+    obj_TFRE_mcp <- hbic.tfre_second(newx, newy, n, beta_RL, second_stage, eta_list, 
+                                     a = a, thresh = thresh, maxin = maxin, 
+                                     maxout = maxout, const = const_hbic)
     intercpt_Rm <- ybar - (obj_TFRE_mcp$Beta%*%xbar)
     Beta_TFRE_mcp <- cbind(intercpt_Rm,obj_TFRE_mcp$Beta)
     min_ind <- which.min(obj_TFRE_mcp$hbic)
     df <- colSums(t(obj_TFRE_mcp$Beta)!=0)
     res_mcp <- list(Beta_TFRE_mcp = Beta_TFRE_mcp, df_TFRE_mcp = df,
-                     eta_list = eta_list, hbic = obj_TFRE_mcp$hbic,
-                     eta_min = eta_list[min_ind], Beta_TFRE_mcp_min = Beta_TFRE_mcp[min_ind,])
-
+                    eta_list = eta_list, hbic = obj_TFRE_mcp$hbic,
+                    eta_min = eta_list[min_ind], Beta_TFRE_mcp_min = Beta_TFRE_mcp[min_ind,])
+    
     res <- append(res, list(TFRE_mcp = res_mcp))
   }else if(second_stage != "none"){
     warning("'second_stage' should be one of 'none', 'scad' and 'mcp'")
