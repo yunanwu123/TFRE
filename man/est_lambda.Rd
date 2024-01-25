@@ -35,7 +35,7 @@ and \eqn{G^{-1}_{||\bm{S}_n||_\infty}(1-alpha0)} denotes the \eqn{(1-alpha0)}-qu
 of the distribution of \eqn{||\bm{S}_n||_\infty}.
 }
 \examples{
-n <- 100; p <- 400
+n <- 20; p <- 50
 X <- matrix(rnorm(n*p),n)
 est_lambda(X)
 

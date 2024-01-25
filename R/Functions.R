@@ -25,7 +25,7 @@
 #'  Journal of the American Statistical Association, 115:532, 1700-1714},
 #'  \doi{10.1080/01621459.2020.1840989}.
 #' @examples
-#' n <- 100; p <- 400
+#' n <- 20; p <- 50
 #' X <- matrix(rnorm(n*p),n)
 #' est_lambda(X)
 #'
@@ -190,24 +190,26 @@ hbic.tfre_second <- function(newx, newy, n, beta_int, second_stage, lambda_list,
 #' Properties, Journal of the American Statistical Association, 96:456, 1348-1360},
 #' \doi{10.1198/016214501753382273}.
 #' @examples
-#' n <- 100; p <- 400
+#' n <- 20; p <- 50
 #' beta0 <- c(1.5,-1.25,1,-0.75,0.5,rep(0,p-5))
-#' eta_list <- 0.1*8:20*sqrt(log(p)/n)
+#' eta_list <- 0.1*6:15*sqrt(log(p)/n)
 #' X <- matrix(rnorm(n*p),n)
 #' y <- X %*% beta0 + rt(n,4)
 #'
-#' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none")
-#' Obj_TFRE_Lasso$beta_TFRE_Lasso
+#' \dontrun{
+#' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none", const_incomplete = 5)
+#' Obj_TFRE_Lasso$beta_TFRE_Lasso[1:10]}
 #'
-#' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
+#' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list, const_incomplete = 5)
 #' Obj_TFRE_SCAD$TFRE_scad$hbic
 #' Obj_TFRE_SCAD$TFRE_scad$df_TFRE_scad
-#' Obj_TFRE_SCAD$TFRE_scad$Beta_TFRE_scad_min
+#' Obj_TFRE_SCAD$TFRE_scad$Beta_TFRE_scad_min[1:10]
 #'
-#' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
+#' \dontrun{
+#' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list, const_incomplete = 5)
 #' Obj_TFRE_MCP$TFRE_mcp$hbic
 #' Obj_TFRE_MCP$TFRE_mcp$df_TFRE_mcp
-#' Obj_TFRE_MCP$TFRE_mcp$Beta_TFRE_mcp_min
+#' Obj_TFRE_MCP$TFRE_mcp$Beta_TFRE_mcp_min[1:10]}
 #'
 
 TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
@@ -236,6 +238,9 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
   ybar <- mean(y)
   lam_lasso <- est_lambda(X, alpha0, const_lambda, times)
   p <- ncol(X)
+  if(is.null(colnames(X))){
+    colnames(X) <- paste0("X",1:p)
+  }
   initial <- rep(0,p)
   
   if(incomplete){
@@ -252,6 +257,7 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
   
   intercpt_RL <- ybar- crossprod(beta_RL,xbar)
   beta_TFRE_Lasso <- c(intercpt_RL,beta_RL)
+  names(beta_TFRE_Lasso) <- c("intercept", colnames(X))
   
   res <- list(X=X,y=y,incomplete=incomplete,beta_TFRE_Lasso=beta_TFRE_Lasso,
               tfre_lambda=lam_lasso,second_stage=second_stage)
@@ -264,6 +270,7 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
     Beta_TFRE_scad <- cbind(intercpt_Rs,obj_TFRE_scad$Beta)
     min_ind <- which.min(obj_TFRE_scad$hbic)
     df <- colSums(t(obj_TFRE_scad$Beta)!=0)
+    colnames(Beta_TFRE_scad) <- c("intercept", colnames(X))
     res_scad <- list(Beta_TFRE_scad = Beta_TFRE_scad, df_TFRE_scad = df,
                      eta_list = eta_list, hbic = obj_TFRE_scad$hbic,
                      eta_min = eta_list[min_ind], Beta_TFRE_scad_min = Beta_TFRE_scad[min_ind,])
@@ -277,6 +284,7 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
     Beta_TFRE_mcp <- cbind(intercpt_Rm,obj_TFRE_mcp$Beta)
     min_ind <- which.min(obj_TFRE_mcp$hbic)
     df <- colSums(t(obj_TFRE_mcp$Beta)!=0)
+    colnames(Beta_TFRE_mcp) <- c("intercept", colnames(X))
     res_mcp <- list(Beta_TFRE_mcp = Beta_TFRE_mcp, df_TFRE_mcp = df,
                     eta_list = eta_list, hbic = obj_TFRE_mcp$hbic,
                     eta_min = eta_list[min_ind], Beta_TFRE_mcp_min = Beta_TFRE_mcp[min_ind,])
@@ -313,23 +321,26 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
 #' Journal of the American Statistical Association, 115:532, 1700-1714},
 #' \doi{10.1080/01621459.2020.1840989}.
 #' @examples
-#' n <- 100; p <- 400
+#' n <- 20; p <- 50
 #' beta0 <- c(1.5,-1.25,1,-0.75,0.5,rep(0,p-5))
-#' eta_list <- 0.1*8:20*sqrt(log(p)/n)
+#' eta_list <- 0.1*6:15*sqrt(log(p)/n)
 #' X <- matrix(rnorm(n*p),n)
 #' y <- X %*% beta0 + rt(n,4)
-#'
-#' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none")
-#' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
-#' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
-#'
 #' newX <- matrix(rnorm(10*p),10)
+#'
+#' \dontrun{
+#' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none", const_incomplete = 5)
 #' predict(Obj_TFRE_Lasso, newX, "1st")
-#' predict(Obj_TFRE_Lasso, newX, "2nd")
+#' predict(Obj_TFRE_Lasso, newX, "2nd")}
+#' 
+#' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list, const_incomplete = 5)
 #' predict(Obj_TFRE_SCAD, newX, "1st")
 #' predict(Obj_TFRE_SCAD, newX, "2nd")
+#' 
+#' \dontrun{
+#' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list, const_incomplete = 5)
 #' predict(Obj_TFRE_MCP, newX, "1st")
-#' predict(Obj_TFRE_MCP, newX, "2nd")
+#' predict(Obj_TFRE_MCP, newX, "2nd")}
 #'
 #' @method predict TFRE
 #'
@@ -386,22 +397,25 @@ predict.TFRE<-function(object, newX, s, ...){
 #' Journal of the American Statistical Association, 115:532, 1700-1714},
 #' \doi{10.1080/01621459.2020.1840989}.
 #' @examples
-#' n <- 100; p <- 400
+#' n <- 20; p <- 50
 #' beta0 <- c(1.5,-1.25,1,-0.75,0.5,rep(0,p-5))
-#' eta_list <- 0.1*8:20*sqrt(log(p)/n)
+#' eta_list <- 0.1*6:15*sqrt(log(p)/n)
 #' X <- matrix(rnorm(n*p),n)
 #' y <- X %*% beta0 + rt(n,4)
 #'
-#' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none")
-#' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
-#' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
-#'
+#' \dontrun{
+#' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none", const_incomplete = 5)
 #' coef(Obj_TFRE_Lasso, "1st")[1:10]
-#' coef(Obj_TFRE_Lasso, "2nd")[1:10]
+#' coef(Obj_TFRE_Lasso, "2nd")[1:10]}
+#' 
+#' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list, const_incomplete = 5)
 #' coef(Obj_TFRE_SCAD, "1st")[1:10]
 #' coef(Obj_TFRE_SCAD, "2nd")[1:10]
+#' 
+#' \dontrun{
+#' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list, const_incomplete = 5)
 #' coef(Obj_TFRE_MCP, "1st")[1:10]
-#' coef(Obj_TFRE_MCP, "2nd")[1:10]
+#' coef(Obj_TFRE_MCP, "2nd")[1:10]}
 #'
 #' @method coef TFRE
 #'
@@ -423,7 +437,7 @@ coef.TFRE<-function(object, s, ...){
   }else{
     stop("s should be one of '1st' and '2nd")
   }
-  return(as.numeric(coef))
+  return(c(coef))
 }
 
 
@@ -446,19 +460,22 @@ coef.TFRE<-function(object, s, ...){
 #' Journal of the American Statistical Association, 115:532, 1700-1714},
 #' \doi{10.1080/01621459.2020.1840989}.
 #' @examples
-#' n <- 100; p <- 400
+#' n <- 20; p <- 50
 #' beta0 <- c(1.5,-1.25,1,-0.75,0.5,rep(0,p-5))
-#' eta_list <- 0.1*8:20*sqrt(log(p)/n)
+#' eta_list <- 0.1*6:15*sqrt(log(p)/n)
 #' X <- matrix(rnorm(n*p),n)
 #' y <- X %*% beta0 + rt(n,4)
 #'
-#' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none")
-#' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
-#' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
-#'
-#' \dontrun{plot(Obj_TFRE_Lasso)}
+#' \dontrun{
+#' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none", const_incomplete = 5)
+#' plot(Obj_TFRE_Lasso)} 
+#' 
+#' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list, const_incomplete = 5)
 #' plot(Obj_TFRE_SCAD)
-#' plot(Obj_TFRE_MCP)
+#'
+#' \dontrun{
+#' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list, const_incomplete = 5)
+#' plot(Obj_TFRE_MCP)}
 #'
 #' @method plot TFRE
 #'
@@ -472,8 +489,11 @@ plot.TFRE<-function(x, ...){
          xlab = "eta value", ylab = "HBIC")
     par(new = TRUE)
     plot(x$TFRE_scad$eta_list, x$TFRE_scad$df_TFRE_scad, type = "l",
-         col = "blue",  axes = FALSE, xlab = "", ylab = "")
-    abline(v = x$TFRE_scad$eta_min, lty = 2, col = "purple")
+         col = "blue",  axes = FALSE, xlab = "", ylab = "")  
+    y0 <- x$TFRE_scad$df_TFRE_scad[which.min(x$TFRE_scad$hbic)]
+    x0 <- x$TFRE_scad$eta_min
+    abline(v = x0, lty = 2, col = "purple")
+    segments(x0,y0, max(x$TFRE_scad$eta_list)*1.1,y0, lty = 2, col = "purple")
     axis(side = 4, at = pretty(range(x$TFRE_scad$df_TFRE_scad)))
     mtext("df", side = 4, line = 3)
     legend("right", legend = c("HBIC", "df"), col = c("red", "blue"),
@@ -485,7 +505,10 @@ plot.TFRE<-function(x, ...){
     par(new = TRUE)
     plot(x$TFRE_mcp$eta_list, x$TFRE_mcp$df_TFRE_mcp, type="l", col = "blue",
          axes = FALSE, xlab = "", ylab = "")
-    abline(v = x$TFRE_mcp$eta_min, lty = 2, col = "purple")
+    y0 <- x$TFRE_mcp$df_TFRE_mcp[which.min(x$TFRE_mcp$hbic)]
+    x0 <- x$TFRE_mcp$eta_min
+    abline(v = x0, lty = 2, col = "purple")
+    segments(x0,y0, max(x$TFRE_mcp$eta_list)*1.1,y0, lty = 2, col = "purple")
     axis(side = 4, at = pretty(range(x$TFRE_mcp$df_TFRE_mcp)))
     mtext("df", side = 4, line = 3)
     legend("right", legend = c("HBIC", "df"), col = c("red", "blue"),

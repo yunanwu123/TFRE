@@ -31,23 +31,26 @@ or \code{"mcp"}, and \code{s = "2nd"}, the function will return the predictions
 based on the TFRE SCAD or MCP regression with the smallest HBIC.
 }
 \examples{
-n <- 100; p <- 400
+n <- 20; p <- 50
 beta0 <- c(1.5,-1.25,1,-0.75,0.5,rep(0,p-5))
-eta_list <- 0.1*8:20*sqrt(log(p)/n)
+eta_list <- 0.1*6:15*sqrt(log(p)/n)
 X <- matrix(rnorm(n*p),n)
 y <- X \%*\% beta0 + rt(n,4)
-
-Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none")
-Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
-Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
-
 newX <- matrix(rnorm(10*p),10)
+
+\dontrun{
+Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none", const_incomplete = 5)
 predict(Obj_TFRE_Lasso, newX, "1st")
-predict(Obj_TFRE_Lasso, newX, "2nd")
+predict(Obj_TFRE_Lasso, newX, "2nd")}
+
+Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list, const_incomplete = 5)
 predict(Obj_TFRE_SCAD, newX, "1st")
 predict(Obj_TFRE_SCAD, newX, "2nd")
+
+\dontrun{
+Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list, const_incomplete = 5)
 predict(Obj_TFRE_MCP, newX, "1st")
-predict(Obj_TFRE_MCP, newX, "2nd")
+predict(Obj_TFRE_MCP, newX, "2nd")}
 
 }
 \references{

@@ -147,24 +147,26 @@ of the index set of the selected model. This function selects the value of \eqn{
  that minimizes HBIC(\eqn{\eta}).
 }
 \examples{
-n <- 100; p <- 400
+n <- 20; p <- 50
 beta0 <- c(1.5,-1.25,1,-0.75,0.5,rep(0,p-5))
-eta_list <- 0.1*8:20*sqrt(log(p)/n)
+eta_list <- 0.1*6:15*sqrt(log(p)/n)
 X <- matrix(rnorm(n*p),n)
 y <- X \%*\% beta0 + rt(n,4)
 
-Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none")
-Obj_TFRE_Lasso$beta_TFRE_Lasso
+\dontrun{
+Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none", const_incomplete = 5)
+Obj_TFRE_Lasso$beta_TFRE_Lasso[1:10]}
 
-Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list)
+Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list, const_incomplete = 5)
 Obj_TFRE_SCAD$TFRE_scad$hbic
 Obj_TFRE_SCAD$TFRE_scad$df_TFRE_scad
-Obj_TFRE_SCAD$TFRE_scad$Beta_TFRE_scad_min
+Obj_TFRE_SCAD$TFRE_scad$Beta_TFRE_scad_min[1:10]
 
-Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list)
+\dontrun{
+Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list, const_incomplete = 5)
 Obj_TFRE_MCP$TFRE_mcp$hbic
 Obj_TFRE_MCP$TFRE_mcp$df_TFRE_mcp
-Obj_TFRE_MCP$TFRE_mcp$Beta_TFRE_mcp_min
+Obj_TFRE_MCP$TFRE_mcp$Beta_TFRE_mcp_min[1:10]}
 
 }
 \references{
