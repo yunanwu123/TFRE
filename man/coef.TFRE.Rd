@@ -19,8 +19,8 @@ The coefficient vector from the fitted TFRE model, with the first
 element as the intercept.
 }
 \description{
-This function extracts the coefficient vector from a fitted TFRE
-Lasso, SCAD or MCP model.
+Extract the coefficient vector from a fitted TFRE Lasso, SCAD or
+MCP model.
 }
 \details{
 If \code{object$second_stage = "none"}, \code{s} cannot be "2nd". If
@@ -36,7 +36,7 @@ eta_list <- 0.1*6:15*sqrt(log(p)/n)
 X <- matrix(rnorm(n*p),n)
 y <- X \%*\% beta0 + rt(n,4)
 
-\dontrun{
+\donttest{
 Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none", const_incomplete = 5)
 coef(Obj_TFRE_Lasso, "1st")[1:10]
 coef(Obj_TFRE_Lasso, "2nd")[1:10]}
@@ -45,7 +45,7 @@ Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list, const_incomplete = 5)
 coef(Obj_TFRE_SCAD, "1st")[1:10]
 coef(Obj_TFRE_SCAD, "2nd")[1:10]
 
-\dontrun{
+\donttest{
 Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list, const_incomplete = 5)
 coef(Obj_TFRE_MCP, "1st")[1:10]
 coef(Obj_TFRE_MCP, "2nd")[1:10]}

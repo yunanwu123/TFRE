@@ -1,7 +1,7 @@
 #' Estimate the tuning parameter for a TFRE Lasso regression
 #'
-#' @description This function estimates the tuning parameter of the TFRE Lasso
-#' regression given the covariate matrix X.
+#' @description Estimate the tuning parameter of the TFRE Lasso regression given 
+#' the covariate matrix X.
 #' @param X Input matrix, of dimension n_obs x n_vars; each row is an observation vector.
 #' @param alpha0 The level to estimate the tuning parameter. Default value is 0.1.
 #' See more details in "Details".
@@ -67,13 +67,13 @@ hbic.tfre_second <- function(newx, newy, n, beta_int, second_stage, lambda_list,
 
 #' Fit a TFRE regression model with Lasso, SCAD or MCP regularization
 #'
-#' @description This function fits a TFRE Lasso model and/or a TFRE SCAD or MCP model.
-#' The TFRE regression models are fitted via QICD algorithm and \emph{Incomplete
-#' U-statistics} resampling technique (optional). The tuning parameter of TFRE
-#' Lasso regression is estimated by the covariate matrix X. The TFRE SCAD / MCP
-#' regressions are computed at a grid of values for the tuning parameter eta. High
-#' dimensional BIC (HBIC) will be used as the criterion on the TFRE SCAD / MCP
-#' tuning parameter searching.
+#' @description Fit a TFRE Lasso model and/or a TFRE SCAD or MCP model. The TFRE 
+#' regression models are fitted via QICD algorithm and \emph{Incomplete U-statistics} 
+#' resampling technique (optional). The tuning parameter of TFRE Lasso regression 
+#' is estimated by the covariate matrix X. The TFRE SCAD / MCP regressions are 
+#' computed at a grid of values for the tuning parameter eta. High dimensional 
+#' BIC (HBIC) will be used as the criterion on the TFRE SCAD / MCP tuning parameter 
+#' searching.
 #' @param X Input matrix, of dimension n_obs x n_vars; each row is an observation vector.
 #' @param y Response variable.
 #' @param alpha0 The level to estimate the tuning parameter. Default value is 0.1.
@@ -170,7 +170,7 @@ hbic.tfre_second <- function(newx, newy, n, beta_int, second_stage, lambda_list,
 #' \item{eta_min}{The eta value which yields the smallest HBIC value in the TFRE
 #' MCP regression.}
 #' \item{Beta_TFRE_mcp_min}{The estimated coefficient vector which employs \code{eta_min}
-#' as the eta value in the TFRE MCP regression.}
+#' as the eta value in the TFRE MCP regression.} 
 #' @author Yunan Wu and Lan Wang\cr Maintainer:
 #' Yunan Wu <yunan.wu@@utdallas.edu>
 #' @seealso \code{\link{predict.TFRE}}, \code{\link{coef.TFRE}}, \code{\link{plot.TFRE}}, \code{\link{est_lambda}}
@@ -196,7 +196,7 @@ hbic.tfre_second <- function(newx, newy, n, beta_int, second_stage, lambda_list,
 #' X <- matrix(rnorm(n*p),n)
 #' y <- X %*% beta0 + rt(n,4)
 #'
-#' \dontrun{
+#' \donttest{
 #' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none", const_incomplete = 5)
 #' Obj_TFRE_Lasso$beta_TFRE_Lasso[1:10]}
 #'
@@ -205,7 +205,7 @@ hbic.tfre_second <- function(newx, newy, n, beta_int, second_stage, lambda_list,
 #' Obj_TFRE_SCAD$TFRE_scad$df_TFRE_scad
 #' Obj_TFRE_SCAD$TFRE_scad$Beta_TFRE_scad_min[1:10]
 #'
-#' \dontrun{
+#' \donttest{
 #' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list, const_incomplete = 5)
 #' Obj_TFRE_MCP$TFRE_mcp$hbic
 #' Obj_TFRE_MCP$TFRE_mcp$df_TFRE_mcp
@@ -300,8 +300,8 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
 
 #' Make predictions from a 'TFRE' object
 #'
-#' @description This function make predictions for new X values from a fitted
-#' TFRE Lasso, SCAD or MCP model.
+#' @description Make predictions for new X values from a fitted TFRE Lasso, SCAD
+#' or MCP model.
 #' @param object Fitted "TFRE" model object.
 #' @param newX Matrix of new values for X at which predictions are to be made.
 #' @param s Regression model to use for prediction. Should be one of "1st" and
@@ -328,7 +328,7 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
 #' y <- X %*% beta0 + rt(n,4)
 #' newX <- matrix(rnorm(10*p),10)
 #'
-#' \dontrun{
+#' \donttest{
 #' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none", const_incomplete = 5)
 #' predict(Obj_TFRE_Lasso, newX, "1st")
 #' predict(Obj_TFRE_Lasso, newX, "2nd")}
@@ -337,7 +337,7 @@ TFRE <- function(X, y, alpha0 = 0.1, const_lambda = 1.01, times = 500,
 #' predict(Obj_TFRE_SCAD, newX, "1st")
 #' predict(Obj_TFRE_SCAD, newX, "2nd")
 #' 
-#' \dontrun{
+#' \donttest{
 #' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list, const_incomplete = 5)
 #' predict(Obj_TFRE_MCP, newX, "1st")
 #' predict(Obj_TFRE_MCP, newX, "2nd")}
@@ -376,8 +376,8 @@ predict.TFRE<-function(object, newX, s, ...){
 
 #' Extract coefficients from a 'TFRE' object
 #'
-#' @description This function extracts the coefficient vector from a fitted TFRE
-#' Lasso, SCAD or MCP model.
+#' @description Extract the coefficient vector from a fitted TFRE Lasso, SCAD or
+#' MCP model.
 #' @param object Fitted "TFRE" model object.
 #' @param s Regression model to use for coefficient extraction. Should be one of
 #' "1st" and "2nd". See more details in "Details".
@@ -388,7 +388,7 @@ predict.TFRE<-function(object, newX, s, ...){
 #' or \code{"mcp"}, and \code{s = "2nd"}, the function will return the coefficient
 #' vector from the TFRE SCAD or MCP regression with the smallest HBIC.
 #' @return The coefficient vector from the fitted TFRE model, with the first
-#' element as the intercept.
+#' element as the intercept. 
 #' @author Yunan Wu and Lan Wang\cr Maintainer:
 #' Yunan Wu <yunan.wu@@utdallas.edu>
 #' @seealso \code{\link{TFRE}}, \code{\link{predict.TFRE}}, \code{\link{plot.TFRE}}
@@ -403,7 +403,7 @@ predict.TFRE<-function(object, newX, s, ...){
 #' X <- matrix(rnorm(n*p),n)
 #' y <- X %*% beta0 + rt(n,4)
 #'
-#' \dontrun{
+#' \donttest{
 #' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none", const_incomplete = 5)
 #' coef(Obj_TFRE_Lasso, "1st")[1:10]
 #' coef(Obj_TFRE_Lasso, "2nd")[1:10]}
@@ -412,7 +412,7 @@ predict.TFRE<-function(object, newX, s, ...){
 #' coef(Obj_TFRE_SCAD, "1st")[1:10]
 #' coef(Obj_TFRE_SCAD, "2nd")[1:10]
 #' 
-#' \dontrun{
+#' \donttest{
 #' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list, const_incomplete = 5)
 #' coef(Obj_TFRE_MCP, "1st")[1:10]
 #' coef(Obj_TFRE_MCP, "2nd")[1:10]}
@@ -443,8 +443,8 @@ coef.TFRE<-function(object, s, ...){
 
 #' Plot the second stage model curve for a 'TFRE' object
 #'
-#' @description This function plots the HBIC curve and the model size curve as a
-#' function of the \code{eta} values used, from a fitted TFRE SCAD or MCP model.
+#' @description Plot the HBIC curve and the model size curve as a function of the 
+#' \code{eta} values used, from a fitted TFRE SCAD or MCP model.
 #' @param x A fitted "TFRE" model object. It should contain a second stage model.
 #' @param ... Not used. Other arguments to be passed through plotting functions.
 #' @details In the output plot, the red line represents the HBIC curve as a function
@@ -452,6 +452,7 @@ coef.TFRE<-function(object, s, ...){
 #' as a function of  \code{eta} values, and the purple vertical dashed line denotes
 #' the model selected with the smallest HBIC.\cr
 #' This function cannot plot the object if \code{object$second_stage = "none"}.
+#' @return No return value, called for side effects. 
 #' @author Yunan Wu and Lan Wang\cr Maintainer:
 #' Yunan Wu <yunan.wu@@utdallas.edu>
 #' @seealso \code{\link{TFRE}}, \code{\link{predict.TFRE}}, \code{\link{coef.TFRE}}
@@ -473,16 +474,18 @@ coef.TFRE<-function(object, s, ...){
 #' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list, const_incomplete = 5)
 #' plot(Obj_TFRE_SCAD)
 #'
-#' \dontrun{
+#' \donttest{
 #' Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list, const_incomplete = 5)
 #' plot(Obj_TFRE_MCP)}
 #'
 #' @method plot TFRE
 #'
-plot.TFRE<-function(x, ...){
+plot.TFRE<-function(x, ...){ 
   if(attr(x, "class")!="TFRE"){
     stop("Please supply a valid 'TFRE' object")
-  }
+  } 
+  oldpar <- par(no.readonly = TRUE)  
+  on.exit(par(oldpar))    
   if(x$second_stage == "scad"){
     par(mar = c(5, 4, 4, 4) + 0.3)
     plot(x$TFRE_scad$eta_list, x$TFRE_scad$hbic,type = "l", col = "red",

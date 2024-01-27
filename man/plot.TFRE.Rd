@@ -11,9 +11,12 @@
 
 \item{...}{Not used. Other arguments to be passed through plotting functions.}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
-This function plots the HBIC curve and the model size curve as a
-function of the \code{eta} values used, from a fitted TFRE SCAD or MCP model.
+Plot the HBIC curve and the model size curve as a function of the 
+\code{eta} values used, from a fitted TFRE SCAD or MCP model.
 }
 \details{
 In the output plot, the red line represents the HBIC curve as a function
@@ -36,7 +39,7 @@ plot(Obj_TFRE_Lasso)}
 Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list, const_incomplete = 5)
 plot(Obj_TFRE_SCAD)
 
-\dontrun{
+\donttest{
 Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list, const_incomplete = 5)
 plot(Obj_TFRE_MCP)}
 

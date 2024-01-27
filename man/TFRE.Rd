@@ -114,13 +114,13 @@ MCP regression.}
 as the eta value in the TFRE MCP regression.}
 }
 \description{
-This function fits a TFRE Lasso model and/or a TFRE SCAD or MCP model.
-The TFRE regression models are fitted via QICD algorithm and \emph{Incomplete
-U-statistics} resampling technique (optional). The tuning parameter of TFRE
-Lasso regression is estimated by the covariate matrix X. The TFRE SCAD / MCP
-regressions are computed at a grid of values for the tuning parameter eta. High
-dimensional BIC (HBIC) will be used as the criterion on the TFRE SCAD / MCP
-tuning parameter searching.
+Fit a TFRE Lasso model and/or a TFRE SCAD or MCP model. The TFRE 
+regression models are fitted via QICD algorithm and \emph{Incomplete U-statistics} 
+resampling technique (optional). The tuning parameter of TFRE Lasso regression 
+is estimated by the covariate matrix X. The TFRE SCAD / MCP regressions are 
+computed at a grid of values for the tuning parameter eta. High dimensional 
+BIC (HBIC) will be used as the criterion on the TFRE SCAD / MCP tuning parameter 
+searching.
 }
 \details{
 Wang \emph{et al.} (2020) proposed the TFRE Lasso estimator for high-dimensional
@@ -153,7 +153,7 @@ eta_list <- 0.1*6:15*sqrt(log(p)/n)
 X <- matrix(rnorm(n*p),n)
 y <- X \%*\% beta0 + rt(n,4)
 
-\dontrun{
+\donttest{
 Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none", const_incomplete = 5)
 Obj_TFRE_Lasso$beta_TFRE_Lasso[1:10]}
 
@@ -162,7 +162,7 @@ Obj_TFRE_SCAD$TFRE_scad$hbic
 Obj_TFRE_SCAD$TFRE_scad$df_TFRE_scad
 Obj_TFRE_SCAD$TFRE_scad$Beta_TFRE_scad_min[1:10]
 
-\dontrun{
+\donttest{
 Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list, const_incomplete = 5)
 Obj_TFRE_MCP$TFRE_mcp$hbic
 Obj_TFRE_MCP$TFRE_mcp$df_TFRE_mcp

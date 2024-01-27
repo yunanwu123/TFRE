@@ -22,8 +22,8 @@ Default value is 500.}
 The estimated tuning parameter of the TFRE Lasso regression given X.
 }
 \description{
-This function estimates the tuning parameter of the TFRE Lasso
-regression given the covariate matrix X.
+Estimate the tuning parameter of the TFRE Lasso regression given 
+the covariate matrix X.
 }
 \details{
 In TFRE Lasso regressions, the tuning parameter can be estimated independent

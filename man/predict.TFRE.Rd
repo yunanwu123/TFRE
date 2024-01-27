@@ -20,8 +20,8 @@
 A vector of predictions for the new X values given the fitted TFRE model.
 }
 \description{
-This function make predictions for new X values from a fitted
-TFRE Lasso, SCAD or MCP model.
+Make predictions for new X values from a fitted TFRE Lasso, SCAD
+or MCP model.
 }
 \details{
 If \code{object$second_stage = "none"}, \code{s} cannot be "2nd". If
@@ -38,7 +38,7 @@ X <- matrix(rnorm(n*p),n)
 y <- X \%*\% beta0 + rt(n,4)
 newX <- matrix(rnorm(10*p),10)
 
-\dontrun{
+\donttest{
 Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none", const_incomplete = 5)
 predict(Obj_TFRE_Lasso, newX, "1st")
 predict(Obj_TFRE_Lasso, newX, "2nd")}
@@ -47,7 +47,7 @@ Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list, const_incomplete = 5)
 predict(Obj_TFRE_SCAD, newX, "1st")
 predict(Obj_TFRE_SCAD, newX, "2nd")
 
-\dontrun{
+\donttest{
 Obj_TFRE_MCP <- TFRE(X, y, second_stage = "mcp", eta_list = eta_list, const_incomplete = 5)
 predict(Obj_TFRE_MCP, newX, "1st")
 predict(Obj_TFRE_MCP, newX, "2nd")}
