@@ -466,11 +466,7 @@ coef.TFRE<-function(object, s, ...){
 #' eta_list <- 0.1*6:15*sqrt(log(p)/n)
 #' X <- matrix(rnorm(n*p),n)
 #' y <- X %*% beta0 + rt(n,4)
-#'
-#' \dontrun{
-#' Obj_TFRE_Lasso <- TFRE(X, y, second_stage = "none", const_incomplete = 5)
-#' plot(Obj_TFRE_Lasso)} 
-#' 
+#'  
 #' Obj_TFRE_SCAD <- TFRE(X, y, eta_list = eta_list, const_incomplete = 5)
 #' plot(Obj_TFRE_SCAD)
 #'
